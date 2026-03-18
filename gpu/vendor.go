@@ -19,7 +19,7 @@ import (
 var readmeContent string
 
 const (
-	githubRepo = "enigmaneering/external"
+	githubRepo = "enigmaneering/redistributables"
 	baseURL    = "https://git.enigmaneering.org"
 )
 
