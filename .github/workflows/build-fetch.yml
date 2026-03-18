@@ -9,8 +9,8 @@ on:
         type: string
 
 jobs:
-  build-fetch:
-    name: Build fetch CLI
+  build-enigmatic:
+    name: Build enigmatic CLI
     strategy:
       fail-fast: true
       matrix:
@@ -55,31 +55,29 @@ jobs:
           go-version: '1.23'
           cache: false
 
-      - name: Build fetch (Unix)
+      - name: Build enigmatic (Unix)
         if: runner.os != 'Windows'
         run: |
-          cd fetch
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o fetch-${{ matrix.platform }}
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} go build -o enigmatic-${{ matrix.platform }}
 
-      - name: Build fetch (Windows)
+      - name: Build enigmatic (Windows)
         if: runner.os == 'Windows'
         run: |
-          cd fetch
           $env:GOOS="${{ matrix.goos }}"
           $env:GOARCH="${{ matrix.goarch }}"
-          go build -o fetch-${{ matrix.platform }}.exe
+          go build -o enigmatic-${{ matrix.platform }}.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: fetch-${{ matrix.platform }}
+          name: enigmatic-${{ matrix.platform }}
           path: |
-            fetch/fetch-${{ matrix.platform }}
-            fetch/fetch-${{ matrix.platform }}.exe
+            enigmatic-${{ matrix.platform }}
+            enigmatic-${{ matrix.platform }}.exe
 
   create-release:
-    name: Create fetch Release
-    needs: [build-fetch]
+    name: Create enigmatic Release
+    needs: [build-enigmatic]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -91,30 +89,30 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          TAG="fetch/${{ inputs.version }}"
+          TAG="${{ inputs.version }}"
           git tag $TAG
           git push origin $TAG
 
-      - name: Download fetch artifacts
+      - name: Download enigmatic artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-          pattern: 'fetch-*'
+          pattern: 'enigmatic-*'
 
       - name: Display artifact structure
         run: ls -R artifacts
 
-      - name: Create fetch Release
+      - name: Create enigmatic Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: fetch/${{ inputs.version }}
-          name: fetch cli ${{ inputs.version }}
+          tag_name: ${{ inputs.version }}
+          name: enigmatic ${{ inputs.version }}
           draft: false
           prerelease: false
           files: |
-            artifacts/**/fetch-*
+            artifacts/**/enigmatic-*
           body: |
-            # fetch ${{ inputs.version }}
+            # enigmatic ${{ inputs.version }}
 
             CLI tool and Go module that downloads and extracts the enigmaneering redistributable binaries.
 
@@ -128,38 +126,38 @@ jobs:
 
             ```bash
             # macOS ARM64 (Apple Silicon)
-            curl -L -o fetch https://git.enigmaneering.org/enigmatic/releases/download/fetch/${{ inputs.version }}/fetch-darwin-arm64
-            chmod +x fetch
-            ./fetch
+            curl -L -o enigmatic https://git.enigmaneering.org/enigmatic/releases/download/${{ inputs.version }}/enigmatic-darwin-arm64
+            chmod +x enigmatic
+            ./enigmatic fetch
 
             # macOS x86_64 (Intel)
-            curl -L -o fetch https://git.enigmaneering.org/enigmatic/releases/download/fetch/${{ inputs.version }}/fetch-darwin-amd64
-            chmod +x fetch
-            ./fetch
+            curl -L -o enigmatic https://git.enigmaneering.org/enigmatic/releases/download/${{ inputs.version }}/enigmatic-darwin-amd64
+            chmod +x enigmatic
+            ./enigmatic fetch
 
             # Linux x86_64
-            curl -L -o fetch https://git.enigmaneering.org/enigmatic/releases/download/fetch/${{ inputs.version }}/fetch-linux-amd64
-            chmod +x fetch
-            ./fetch
+            curl -L -o enigmatic https://git.enigmaneering.org/enigmatic/releases/download/${{ inputs.version }}/enigmatic-linux-amd64
+            chmod +x enigmatic
+            ./enigmatic fetch
 
             # Linux ARM64
-            curl -L -o fetch https://git.enigmaneering.org/enigmatic/releases/download/fetch/${{ inputs.version }}/fetch-linux-arm64
-            chmod +x fetch
-            ./fetch
+            curl -L -o enigmatic https://git.enigmaneering.org/enigmatic/releases/download/${{ inputs.version }}/enigmatic-linux-arm64
+            chmod +x enigmatic
+            ./enigmatic fetch
 
             # Windows x86_64 (PowerShell)
-            Invoke-WebRequest -Uri "https://git.enigmaneering.org/enigmatic/releases/download/fetch/${{ inputs.version }}/fetch-windows-amd64.exe" -OutFile "fetch.exe"
-            .\fetch.exe
+            Invoke-WebRequest -Uri "https://git.enigmaneering.org/enigmatic/releases/download/${{ inputs.version }}/enigmatic-windows-amd64.exe" -OutFile "enigmatic.exe"
+            .\enigmatic.exe fetch
 
             # Windows ARM64 (PowerShell)
-            Invoke-WebRequest -Uri "https://git.enigmaneering.org/enigmatic/releases/download/fetch/${{ inputs.version }}/fetch-windows-arm64.exe" -OutFile "fetch.exe"
-            .\fetch.exe
+            Invoke-WebRequest -Uri "https://git.enigmaneering.org/enigmatic/releases/download/${{ inputs.version }}/enigmatic-windows-arm64.exe" -OutFile "enigmatic.exe"
+            .\enigmatic.exe fetch
             ```
 
             ### Using the Go Module
 
             ```go
-            import "git.enigmaneering.org/enigmatic/fetch/gpu"
+            import "git.enigmaneering.org/enigmatic/gpu"
 
             func main() {
                 // Downloads and extracts latest toolchain to ./external/
@@ -177,7 +175,7 @@ jobs:
 
             Install:
             ```bash
-            go get git.enigmaneering.org/enigmatic/fetch@fetch/${{ inputs.version }}
+            go get git.enigmaneering.org/enigmatic@${{ inputs.version }}
             ```
 
             ## 📦 Downloads
