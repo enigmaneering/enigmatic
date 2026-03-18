@@ -19,8 +19,9 @@ import (
 var readmeContent string
 
 const (
-	githubRepo = "enigmaneering/redistributables"
-	baseURL    = "https://git.enigmaneering.org"
+	githubRepo    = "enigmaneering/redistributables"
+	baseURL       = "https://git.enigmaneering.org"        // For downloads
+	githubAPIBase = "https://api.github.com/repos"         // For API queries
 )
 
 // GitHubRelease represents a GitHub release
@@ -41,7 +42,7 @@ func GetExternalDir() string {
 // getLatestVersion queries GitHub for the latest redistributables release tag
 // This filters for releases starting with "v0." to avoid go/fetch releases
 func getLatestVersion() (string, error) {
-	url := fmt.Sprintf("%s/api/v1/repos/%s/releases?per_page=30", baseURL, githubRepo)
+	url := fmt.Sprintf("%s/%s/releases?per_page=30", githubAPIBase, githubRepo)
 
 	resp, err := http.Get(url)
 	if err != nil {
