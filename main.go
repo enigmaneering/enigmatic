@@ -29,7 +29,7 @@ func main() {
 }
 
 func printUsage() {
-	fmt.Println("e - The Enigmaneering Guild CLI")
+	fmt.Println("e - The Enigmaneering Guild's CLI")
 	fmt.Println()
 	fmt.Println("Usage:")
 	fmt.Println("  e <command> [flags]")
@@ -63,8 +63,8 @@ func runFetch(args []string) {
 		fmt.Println("  e fetch -dir /opt/shaders  # Install to custom directory")
 		fmt.Println()
 		fmt.Println("Freeze Updates:")
-		fmt.Println("  Create a 'FREEZE' file in the external directory to prevent")
-		fmt.Println("  automatic upgrades when new versions are released.")
+		fmt.Println("  Create an extensionless and empty 'FREEZE' file in the external directory")
+		fmt.Println("  to prevent automatic upgrades when new versions are released.")
 	}
 
 	fetchCmd.Parse(args)

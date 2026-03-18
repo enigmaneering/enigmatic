@@ -1,45 +1,8 @@
-# e - The Enigmaneering Guild CLI Tool
+# The Enigmaneering Guild's CLI Tool - `e`
 
-The official command-line interface for The Enigmaneering Guild's tools and utilities.
-
-## Installation
-
-Download the latest release for your platform:
-
-### macOS
-```bash
-# ARM64 (Apple Silicon)
-curl -L -o e https://git.enigmaneering.org/enigmatic/releases/latest/download/e-darwin-arm64
-chmod +x e
-sudo mv e /usr/local/bin/
-
-# x86_64 (Intel)
-curl -L -o e https://git.enigmaneering.org/enigmatic/releases/latest/download/e-darwin-amd64
-chmod +x e
-sudo mv e /usr/local/bin/
-```
-
-### Linux
-```bash
-# x86_64
-curl -L -o e https://git.enigmaneering.org/enigmatic/releases/latest/download/e-linux-amd64
-chmod +x e
-sudo mv e /usr/local/bin/
-
-# ARM64
-curl -L -o e https://git.enigmaneering.org/enigmatic/releases/latest/download/e-linux-arm64
-chmod +x e
-sudo mv e /usr/local/bin/
-```
-
-### Windows
-```powershell
-# x86_64
-Invoke-WebRequest -Uri "https://git.enigmaneering.org/enigmatic/releases/latest/download/e-windows-amd64.exe" -OutFile "e.exe"
-
-# ARM64
-Invoke-WebRequest -Uri "https://git.enigmaneering.org/enigmatic/releases/latest/download/e-windows-arm64.exe" -OutFile "e.exe"
-```
+Currently, this only distributes redistributables from Other.  You may use it directly through the release
+binaries as `e` - or, more colloquially, by importing `git.enigmaneering.org/enigmatic` into your Go project
+for continuous integration of the latest redistributables while you work.
 
 ## Usage
 
@@ -74,7 +37,7 @@ e fetch -help
 - `ENIGMATIC_GOFETCH_DIRECTORY` - Override installation directory
 
 **Freeze Updates:**
-Create a `FREEZE` file in the external directory to prevent automatic upgrades when new versions are released.
+Create an extensionless and empty `FREEZE` file in the external directory to prevent automatic upgrades when new versions are released.
 
 ## Go Module Usage
 
@@ -101,15 +64,3 @@ func main() {
 ```bash
 go get git.enigmaneering.org/enigmatic@latest
 ```
-
-## Building from Source
-
-```bash
-git clone https://github.com/enigmaneering/enigmatic.git
-cd enigmatic
-go build -o e
-```
-
-## License
-
-Part of The Enigmaneering Guild's toolchain.
