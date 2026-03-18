@@ -9,34 +9,65 @@ import (
 )
 
 func main() {
-	version := flag.String("version", "", "Specific version to download (e.g., v0.0.42). Defaults to latest.")
-	dir := flag.String("dir", "external", "Directory to install libraries (default: ./external)")
-	help := flag.Bool("help", false, "Show help message")
+	if len(os.Args) < 2 {
+		printUsage()
+		os.Exit(1)
+	}
 
-	flag.Parse()
+	command := os.Args[1]
 
-	if *help {
-		fmt.Println("fetch - Download shader compilation toolchain binaries")
+	switch command {
+	case "fetch":
+		runFetch(os.Args[2:])
+	case "help", "-h", "--help":
+		printUsage()
+	default:
+		fmt.Fprintf(os.Stderr, "Unknown command: %s\n\n", command)
+		printUsage()
+		os.Exit(1)
+	}
+}
+
+func printUsage() {
+	fmt.Println("e - The Enigmaneering Guild CLI")
+	fmt.Println()
+	fmt.Println("Usage:")
+	fmt.Println("  e <command> [flags]")
+	fmt.Println()
+	fmt.Println("Commands:")
+	fmt.Println("  fetch    Download shader compilation toolchain binaries")
+	fmt.Println("  help     Show this help message")
+	fmt.Println()
+	fmt.Println("Run 'e <command> -help' for more information on a command.")
+}
+
+func runFetch(args []string) {
+	fetchCmd := flag.NewFlagSet("fetch", flag.ExitOnError)
+	version := fetchCmd.String("version", "", "Specific version to download (e.g., v0.0.42). Defaults to latest.")
+	dir := fetchCmd.String("dir", "external", "Directory to install libraries (default: ./external)")
+
+	fetchCmd.Usage = func() {
+		fmt.Println("Usage: e fetch [flags]")
 		fmt.Println()
-		fmt.Println("Usage:")
-		fmt.Println("  fetch [flags]")
+		fmt.Println("Download shader compilation toolchain binaries")
 		fmt.Println()
 		fmt.Println("Flags:")
-		flag.PrintDefaults()
+		fetchCmd.PrintDefaults()
 		fmt.Println()
 		fmt.Println("Environment Variables:")
 		fmt.Println("  ENIGMATIC_GOFETCH_DIRECTORY - Override installation directory")
 		fmt.Println()
 		fmt.Println("Examples:")
-		fmt.Println("  fetch                    # Install latest version to ./external")
-		fmt.Println("  fetch -version v0.0.42   # Install specific version")
-		fmt.Println("  fetch -dir /opt/shaders  # Install to custom directory")
+		fmt.Println("  e fetch                    # Install latest version to ./external")
+		fmt.Println("  e fetch -version v0.0.42   # Install specific version")
+		fmt.Println("  e fetch -dir /opt/shaders  # Install to custom directory")
 		fmt.Println()
 		fmt.Println("Freeze Updates:")
 		fmt.Println("  Create a 'FREEZE' file in the external directory to prevent")
 		fmt.Println("  automatic upgrades when new versions are released.")
-		os.Exit(0)
 	}
+
+	fetchCmd.Parse(args)
 
 	// Set directory if specified
 	if *dir != "external" {
