@@ -112,8 +112,6 @@ jobs:
           files: |
             artifacts/**/e-*
           body: |
-            # e ${{ inputs.version }}
-
             CLI tool and Go module that downloads and extracts the enigmaneering redistributable binaries.
 
             By default, fetches the latest redistributables. View [all redistributable releases](https://git.enigmaneering.org/redistributables/releases?q=redistributables) to see available versions.
